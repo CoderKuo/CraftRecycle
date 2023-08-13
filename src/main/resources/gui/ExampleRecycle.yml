@@ -1,0 +1,43 @@
+title: '示例回收菜单'
+mode: recycle
+slots:
+  - '#########'
+  - '#       #'
+  - '#       #'
+  - '###>B<###'
+setting:
+  '#':
+    mode: none
+    item:
+      material: 'STAINED_GLASS_PANE'
+      name: '&6边框'
+      lore:
+        - '&7-'
+  '>':
+    mode: none
+    item:
+      material: 'ARROW'
+      name: '&a点击右侧按钮开始回收'
+      lore:
+        - '&6->>'
+  '<':
+    mode: none
+    item:
+      material: 'ARROW'
+      name: '&a点击左侧按钮开始回收'
+      lore:
+        - '&6<<-'
+  b:
+    mode: button
+    item:
+      material: 'ANVIL'
+      name: '&a点击开始回收'
+      lore:
+        - ''
+        - '&f 共计&a{amount}&f件物品需要回收'
+        - ''
+        - '&f 预计耗时: {time}秒完成...'
+        - ''
+
+import:
+  - 'marquee'

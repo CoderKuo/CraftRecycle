@@ -1,0 +1,50 @@
+plugins {
+    `java-library`
+    `maven-publish`
+    id("io.izzel.taboolib") version "1.41"
+    id("org.jetbrains.kotlin.jvm") version "1.5.10"
+}
+
+taboolib {
+    install("common")
+    install("common-5")
+    install("module-chat")
+    install("module-configuration")
+    install("module-kether")
+    install("module-lang")
+    install("module-nms")
+    install("module-nms-util")
+    install("module-ui")
+    install("platform-bukkit")
+    classifier = null
+    version = "6.0.9-33"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly("ink.ptms:nms-all:1.0.0")
+    compileOnly("ink.ptms.core:v11900:11900-minimize:mapped")
+    compileOnly("ink.ptms.core:v11900:11900-minimize:universal")
+    compileOnly(kotlin("stdlib"))
+    compileOnly(fileTree("libs"))
+}
+
+
+java{
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.compileJava {
+    options.encoding = "UTF-8"
+}
+
+tasks.compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xjvm-default=all")
+    }
+}
