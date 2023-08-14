@@ -2,8 +2,10 @@ package com.dakuo.craftrecycle.rule
 
 import com.dakuo.craftrecycle.rule.reward.IReward
 import com.dakuo.craftrecycle.rule.reward.Reward
+import org.bukkit.inventory.ItemStack
 import taboolib.common.io.runningClasses
 import taboolib.module.configuration.Configuration
+import taboolib.platform.util.hasName
 
 open class Rule(config:Configuration, name:String) {
 
@@ -16,6 +18,12 @@ open class Rule(config:Configuration, name:String) {
     }
 
 
+    fun match(item:ItemStack):IReward{
+        matchRules.filter {
+            TODO()
+        }
+        TODO()
+    }
 
 
 }
@@ -58,4 +66,29 @@ data class MatchRule(val name:String?,val lore:List<String>?,val nbt:Map<String,
             return MatchRule(map["name"].toString(),map["lore"] as List<String>, map["nbt"] as Map<String, String>?)
         }
     }
+
+
+    fun matchName(item:ItemStack){
+
+    }
+
+    fun String.containsVar():Variable{
+        generateRegexPattern(this)
+        TODO()
+    }
+
+    fun generateRegexPattern(template: String): String {
+        val placeholders = "\\{set:(.*?)}".toRegex().findAll(template).map { it.groupValues[1] }
+
+        var regexPattern = template
+        for (placeholder in placeholders) {
+            val escapedPlaceholder = Regex.escape(placeholder)
+            regexPattern = regexPattern.replace("{set:$placeholder}", "(?<$escapedPlaceholder>.+?)")
+        }
+
+        return regexPattern
+    }
+
+
+
 }

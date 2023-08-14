@@ -3,14 +3,20 @@ package com.dakuo.craftrecycle.ui.slotmode
 import com.dakuo.craftrecycle.ui.slotmode.clicked.Clicked
 import taboolib.module.ui.ClickEvent
 
-object None:Mode {
+object Button:Mode {
 
-    override val name = listOf("none","None")
 
-    override val clicked = object : Clicked {
+    override val name: List<String> = listOf("button","Button")
+
+    override val clicked: Clicked = object : Clicked {
         override fun click(clickEvent: ClickEvent) {
             clickEvent.isCancelled = true
+            clickEvent.getItems(' ').plus(clickEvent.getItems('o')).forEach {
+
+            }
         }
     }
+
+
 
 }

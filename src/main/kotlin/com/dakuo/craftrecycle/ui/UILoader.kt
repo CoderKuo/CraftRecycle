@@ -15,14 +15,16 @@ object UILoader {
 
     @Awake(LifeCycle.ENABLE)
     fun loadAll(){
-        val guiFile = File(BukkitPlugin.getInstance().dataFolder, "gui")
+        uiList.clear()
+        val guiFile = File(BukkitPlugin.getInstance().dataFolder, "/gui/")
         if (!guiFile.exists()){
             guiFile.mkdir()
             BukkitPlugin.getInstance().saveResource("gui/ExampleRecycle.yml",false)
             BukkitPlugin.getInstance().saveResource("gui/ExampleBreak.yml",false)
         }
+
         guiFile.listFiles(FileFilter {
-            it.endsWith(".yml")
+            it.name.endsWith(".yml")
         }).forEach {
             val config = Configuration.loadFromFile(it)
 
@@ -30,14 +32,14 @@ object UILoader {
 
             uiList.add(Pair(it.name.replace(".yml",""),toUIObject(mode,config)))
 
-            info("UI ${config.name} 配置文件已加载")
+            info("UI-FILE ${it.name} 配置文件已加载")
         }
 
     }
 
     fun toUIObject(mode:String,config:Configuration):DefaultUI{
         return runningClasses.filter {
-            DefaultUI::class.java.isAssignableFrom(DefaultUI::class.java)
+            DefaultUI::class.java.isAssignableFrom(it)
         }.find {
             it.getAnnotation(UI::class.java).name == mode
         }?.let {

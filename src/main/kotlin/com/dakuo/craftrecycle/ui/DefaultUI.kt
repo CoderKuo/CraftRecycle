@@ -21,6 +21,8 @@ import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+
+
 @UI("default")
 open class DefaultUI(val config:Configuration) {
 
@@ -58,7 +60,7 @@ open class DefaultUI(val config:Configuration) {
         settings.forEach {
             items[it.slot] = buildItem(XMaterial.matchXMaterial(it.itemMaterial).get()){
                 this.name = it.itemName
-                this.lore.addAll(this.lore)
+                this.lore.addAll(it.itemLore)
                 this.damage = it.itemData
                 this.customModelData = it.itemCustomModel
             }
@@ -81,7 +83,7 @@ data class DefaultSetting(val slot:Char,
         return runningClasses.filter {
             Mode::class.java.isAssignableFrom(it) && it != Mode::class.java
         }.map {
-            it.getConstructor().newInstance() as? Mode
+            it.getInstance() as? Mode
         }.filter(Objects::nonNull).find{
             it!!.name.contains(mode)
         } ?: None

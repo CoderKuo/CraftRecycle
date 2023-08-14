@@ -14,11 +14,11 @@ import java.io.File
 
 object Lang{
 
-    val lang:Configuration = loadLang()
+    @JvmStatic
+    lateinit var lang:Configuration
 
     @Awake(LifeCycle.ENABLE)
-    fun loadLang():Configuration{
-
+    fun loadLang(){
         val lang = CraftRecycle.config.getString("lang")
         val langFile = File(BukkitPlugin.getInstance().dataFolder, "lang/${lang}.yml")
         if (!langFile.exists()){
@@ -30,7 +30,7 @@ object Lang{
         }
         val loadFromFile = Configuration.loadFromFile(langFile)
         info("语言文件加载成功！ 当前语言为：${lang}")
-        return loadFromFile
+        this.lang = loadFromFile
     }
 
 }

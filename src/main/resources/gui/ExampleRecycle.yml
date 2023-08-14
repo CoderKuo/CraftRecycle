@@ -27,7 +27,7 @@ setting:
       name: '&a点击左侧按钮开始回收'
       lore:
         - '&6<<-'
-  b:
+  B:
     mode: button
     item:
       material: 'ANVIL'

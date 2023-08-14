@@ -5,6 +5,7 @@ import com.dakuo.craftrecycle.ui.UILoader
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.ProxyPlayer
 import taboolib.common.platform.command.subCommand
+import taboolib.common.platform.function.getProxyPlayer
 import taboolib.module.lang.sendErrorMessage
 import taboolib.platform.type.BukkitPlayer
 import taboolib.platform.util.onlinePlayers
@@ -30,9 +31,9 @@ object UICmd {
                         return@execute
                     }
                     pair.second.toInventory().let {
-                        val player = (context["player"] as BukkitPlayer).player
+                        val player = (getProxyPlayer(context["player"]) as BukkitPlayer).player
                         player.openInventory(it)
-                        sender.sendLang("cmd-openUI", mapOf(Pair("player", player.name), Pair("ui", context["ui"])))
+                        sender.sendLang("cmd-openUI", mapOf(Pair("{player}", player.name), Pair("{ui}", context["ui"])))
                     }
 
                 }

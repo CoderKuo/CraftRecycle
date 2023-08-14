@@ -9,6 +9,7 @@ example_recycle:
   reward:
     test_reward_id:
       match_mode: all
+      chance: 0.5
       score:
         vault:
           amount: '{get:num}'

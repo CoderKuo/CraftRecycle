@@ -10,4 +10,4 @@ example_break:
       item:
         mythic:
           id: test
-          amount: {get:num}
+          amount: '{get:num}'
