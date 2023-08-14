@@ -39,5 +39,9 @@ setting:
         - '&f 预计耗时: {time}秒完成...'
         - ''
 
-import:
-  - 'marquee'
+animation:
+  - bind: '#'
+    interval: 20
+    values:
+      item:
+        data: {randomInt_0_10}

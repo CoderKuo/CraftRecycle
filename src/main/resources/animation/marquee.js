@@ -1,4 +1,0 @@
-
-function openInv(inv,player){
-
-}
