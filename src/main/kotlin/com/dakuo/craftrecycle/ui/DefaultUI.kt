@@ -1,5 +1,12 @@
 package com.dakuo.craftrecycle.ui
 
+import com.dakuo.craftrecycle.ui.slotmode.Mode
+import com.dakuo.craftrecycle.ui.slotmode.None
+import net.minecraft.world.item.Items
+import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemStack
+import taboolib.common.io.getInstance
+import taboolib.common.io.runningClasses
 import taboolib.library.xseries.XMaterial
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.util.getStringColored
@@ -8,12 +15,18 @@ import taboolib.module.ui.Menu
 import taboolib.module.ui.buildMenu
 import taboolib.module.ui.type.Basic
 import taboolib.platform.util.buildItem
-
-class DefaultUI(val config:Configuration) {
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
+import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+@UI("default")
+open class DefaultUI(val config:Configuration) {
 
     private val title = config.getString("title"," ")!!
 
-    private val slots: ArrayList<List<Char>> = config.getStringList("slots").map { it.toCharArray().toList() } as ArrayList<List<Char>>
+    private val slots: CopyOnWriteArrayList<List<Char>> = CopyOnWriteArrayList(config.getStringList("slots").map { it.toCharArray().toList() })
 
     private val settings:List<DefaultSetting> by lazy {
         config.getConfigurationSection("setting")!!.getKeys(false).map {
@@ -30,13 +43,28 @@ class DefaultUI(val config:Configuration) {
         }
     }
 
-    open fun toInventory(){
-        buildMenu<Basic> {
+    open fun toInventory():Inventory{
+        return buildMenu<Basic>(title) {
             this.slots = this@DefaultUI.slots
-            this.items =
-
-
+            this.items = getItems()
+            onClick(lock = false){ e->
+                settings.find { it.slot == e.slot }?.getSlotMode()?.clicked?.click(e)
+            }
         }
+    }
+
+    private fun getItems():ConcurrentHashMap<Char,ItemStack>{
+        val items = mutableMapOf<Char,ItemStack>()
+        settings.forEach {
+            items[it.slot] = buildItem(XMaterial.matchXMaterial(it.itemMaterial).get()){
+                this.name = it.itemName
+                this.lore.addAll(this.lore)
+                this.damage = it.itemData
+                this.customModelData = it.itemCustomModel
+            }
+        }
+        return ConcurrentHashMap(items)
+
     }
 
 
@@ -49,13 +77,16 @@ data class DefaultSetting(val slot:Char,
                      val itemLore:List<String> = arrayListOf(),
                      val itemData:Int = 0,
                      val itemCustomModel:Int = 0){
-    fun toItemStack(){
-        buildItem(XMaterial.matchXMaterial(itemMaterial).get()){
-            this.name = itemName;
-            this.lore.addAll(itemLore);
-            this.damage = itemData;
-            this.customModelData = itemCustomModel;
-        }
+    fun getSlotMode():Mode{
+        return runningClasses.filter {
+            Mode::class.java.isAssignableFrom(it) && it != Mode::class.java
+        }.map {
+            it.getConstructor().newInstance() as? Mode
+        }.filter(Objects::nonNull).find{
+            it!!.name.contains(mode)
+        } ?: None
     }
+
+
 
 }

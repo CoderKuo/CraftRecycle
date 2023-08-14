@@ -1,0 +1,16 @@
+
+example_recycle:
+  match:
+    - name: '示例被回收物品'
+      lore:
+        - '回收可得{set:num}金币'
+      nbt:
+        craft_recycle: '{set:nbtnum}'
+  reward:
+    test_reward_id:
+      match_mode: all
+      score:
+        vault:
+          amount: '{get:num}'
+  msg:
+    - ''

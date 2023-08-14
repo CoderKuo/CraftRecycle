@@ -1,0 +1,13 @@
+
+example_break:
+  match:
+    - name: '示例被分解物品'
+      lore:
+        - '分解可得{set:num}个示例材料'
+  reward:
+    test_reward_id:
+      match_mode: all
+      item:
+        mythic:
+          id: test
+          amount: {get:num}
