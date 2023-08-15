@@ -69,21 +69,38 @@ fun varSetHandler(varPairs: List<Pair<String, String>>, template: String, target
 val list = mutableListOf<Variable>()
 
 fun main() {
-    val template = "当前版本为 {set:version} 版本，{set:num}金币"
-    val target = "当前版本为 1.0 版本，100金币"
 
-    println("template: $template")
-    println("target: $target")
 
-    val containsVar = template.containsVar()
-    varSetHandler(containsVar,template,target)
+//    println("template: $template")
+//    println("target: $target")
+//
+//    val containsVar = template.containsVar()
+//    varSetHandler(containsVar,template,target)
     val getTemplate = "取出变量测试{get:version} {get:num}"
-
-    val containsVar1 = getTemplate.containsVar()
-    val varGetHandler = varGetHandler(containsVar1)
-    varGetHandler.forEach {
-        println("${it.first} : ${it.second}")
+//
+//    val containsVar1 = getTemplate.containsVar()
+//    val varGetHandler = varGetHandler(containsVar1)
+//    varGetHandler.forEach {
+//        println("${it.first} : ${it.second}")
+//    }
+//
+//    println(getTemplate.replaceVar())
+    val template = "当前版本为 {set:version} 版本，{set:num}金币"
+    val target = "当前版本为 1-测试 版本，100金币"
+    val variableHandler = com.dakuo.craftrecycle.rule.VariableHandler()
+    val startTime = System.currentTimeMillis()
+    for (i in 1..1000) {
+        val containsVar2 = variableHandler.containsVar("$template,{set:i} 次")
+        variableHandler.varSetHandler(containsVar2, "$template,{set:i} 次", "$target,$i 次")
     }
 
-    println(getTemplate.replaceVar())
+    for (i in 1..1000) {
+        variableHandler.replaceVar("$getTemplate {get:i}")
+    }
+
+    variableHandler.list.forEach {
+        println(it.value?.javaClass)
+    }
+    println((System.currentTimeMillis() - startTime).toString()+"ms.")
+
 }

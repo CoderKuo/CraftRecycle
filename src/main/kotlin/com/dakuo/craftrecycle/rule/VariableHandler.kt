@@ -4,43 +4,50 @@ import java.util.regex.Pattern
 
 class VariableHandler {
 
-    val list = arrayListOf<Variable>()
+    val list = arrayListOf<Variable<*>>()
 
-    fun String.containsVar():List<Pair<String,String>>{
-        val list = mutableListOf<Pair<String,String>>()
-        this.forEachIndexed { index, c ->
-            if (c == '{'){
-                val endIndex = this.indexOf('}', index) ?: -1
-                if (endIndex == -1) return@forEachIndexed
-                val key = this.substring(index, endIndex+1)
-                val operatorKey = key.replace("{","").replace("}","").split(":")[0]
-                val dataKey = key.replace("{","").replace("}","").split(":")[1]
-                list.add(Pair(operatorKey,dataKey))
-            }
+
+
+    private val placeholderPattern = "\\{([^:]+):([^}]+)}".toRegex()
+
+    fun containsVar(string: String): List<Pair<String, String>> {
+        val list = mutableListOf<Pair<String, String>>()
+        val matches = placeholderPattern.findAll(string)
+
+        for (match in matches) {
+            val (operatorKey, dataKey) = match.destructured
+            list.add(Pair(operatorKey, dataKey))
         }
+
         return list
     }
 
-    fun String.replaceVar():String{
-        val containsVar = this.containsVar()
-        val varGetHandler = varGetHandler(containsVar)
-        var temp = this
-        varGetHandler.forEach {
-            temp = temp.replace("{get:${it.first}}",it.second.toString())
+    fun replaceVar(string: String):String{
+        val varGetHandler = varGetHandler(containsVar(string))
+        var temp = string
+        for ((operatorKey, replacement) in varGetHandler) {
+            temp = temp.replace("{get:$operatorKey}", replacement)
         }
         return temp
     }
 
-    fun getVariableList(varPairs:List<Pair<String,String>>,template: String,target: String):List<Variable>{
-        var temp = template
-        varPairs.forEach {
-            temp = temp.replace("{${it.first}:${it.second}}","(?<${it.second}>.*?)")
+    fun getVariableList(varPairs:List<Pair<String,String>>,template: String,target: String):List<Variable<*>>{
+        var regexPattern = template
+        varPairs.forEach { (operatorKey, dataKey) ->
+            regexPattern = regexPattern.replace("{$operatorKey:$dataKey}", "(?<$dataKey>.*?)")
         }
-        val matcher = Pattern.compile(temp).matcher(target)
+        val matcher = Pattern.compile(regexPattern).matcher(target)
         while (matcher.find()){
             return varPairs.map {
                 val value = matcher.group(it.second)
-                Variable(it.second,value)
+
+                val variable: Variable<*> = when {
+                    value.toIntOrNull() != null -> Variable(it.second, value.toInt())
+                    value.toDoubleOrNull() != null -> Variable(it.second, value.toDouble())
+                    value.toBooleanStrictOrNull() != null -> Variable(it.second, value.toBoolean())
+                    else -> Variable(it.second, value)
+                }
+                variable
             }.toList()
         }
         return mutableListOf()
@@ -60,12 +67,20 @@ class VariableHandler {
         return templist
     }
 
-    fun varSetHandler(varPairs: List<Pair<String, String>>, template: String, target: String){
-        varPairs.filter {
-            it.first == "set"
-        }.let {
-            list.addAll(getVariableList(varPairs,template,target))
+    fun varSetHandler(varPairs: List<Pair<String, String>>, template: String, target: String) {
+        val newVariables = getVariableList(varPairs, template, target)
+        val existingKeys = list.map { it.key }
+
+        newVariables.forEach { newVar ->
+            val existingIndex = existingKeys.indexOf(newVar.key)
+
+            if (existingIndex != -1) {
+                list[existingIndex] = newVar
+            } else {
+                list.add(newVar)
+            }
         }
     }
+
 
 }
