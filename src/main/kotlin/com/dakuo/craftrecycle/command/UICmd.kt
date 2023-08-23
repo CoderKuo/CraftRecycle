@@ -27,7 +27,7 @@ object UICmd {
                         it.first == context["ui"]
                     }
                     if (pair == null){
-                        sender.sendErrorMessage("没有找到名称为${context.get("ui")}的菜单")
+                        sender.sendErrorMessage("没有找到名称为${context["ui"]}的菜单")
                         return@execute
                     }
                     pair.second.toInventory().let {

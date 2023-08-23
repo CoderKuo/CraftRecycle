@@ -25,7 +25,7 @@ object Lang{
             if (lang == "zh_CN"){
                 BukkitPlugin.getInstance().saveResource("lang/zh_CN.yml",false)
             }else{
-                error("指定的 ${lang} 语言不存在,请检查lang目录下的文件")
+                error("指定的 $lang 语言不存在,请检查lang目录下的文件")
             }
         }
         val loadFromFile = Configuration.loadFromFile(langFile)
