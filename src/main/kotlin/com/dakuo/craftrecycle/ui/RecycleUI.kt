@@ -1,8 +1,9 @@
 package com.dakuo.craftrecycle.ui
 
+import com.dakuo.craftrecycle.common.AName
 import taboolib.module.configuration.Configuration
 
-@UI("recycle")
+@AName("recycle")
 class RecycleUI(config: Configuration) :DefaultUI(config) {
 
 }

@@ -1,5 +1,6 @@
 package com.dakuo.craftrecycle.ui
 
+import com.dakuo.craftrecycle.common.AName
 import com.dakuo.craftrecycle.ui.slotmode.Mode
 import com.dakuo.craftrecycle.ui.slotmode.None
 import net.minecraft.world.item.Items
@@ -23,7 +24,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-@UI("default")
+@AName("default")
 open class DefaultUI(val config:Configuration) {
 
     private val title = config.getString("title"," ")!!
@@ -52,6 +53,7 @@ open class DefaultUI(val config:Configuration) {
             onClick(lock = false){ e->
                 settings.find { it.slot == e.slot }?.getSlotMode()?.clicked?.click(e)
             }
+
         }
     }
 
@@ -68,6 +70,7 @@ open class DefaultUI(val config:Configuration) {
         return ConcurrentHashMap(items)
 
     }
+
 
 
 }

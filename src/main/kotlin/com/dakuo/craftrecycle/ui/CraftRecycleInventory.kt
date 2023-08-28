@@ -11,6 +11,10 @@ class CraftRecycleInventory(val player: Player, val ui: DefaultUI) {
 
     }
 
+    init {
+
+    }
+
     fun open(){
         player.openInventory(getBukkitInventory())
     }
@@ -25,5 +29,7 @@ class CraftRecycleInventory(val player: Player, val ui: DefaultUI) {
     fun isOpen():Boolean{
         return inventory.viewers.contains(player)
     }
+
+
 
 }

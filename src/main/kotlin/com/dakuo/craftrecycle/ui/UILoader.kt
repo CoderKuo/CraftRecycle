@@ -1,5 +1,6 @@
 package com.dakuo.craftrecycle.ui
 
+import com.dakuo.craftrecycle.common.AName
 import taboolib.common.LifeCycle
 import taboolib.common.io.runningClasses
 import taboolib.common.platform.Awake
@@ -41,7 +42,7 @@ object UILoader {
         return runningClasses.filter {
             DefaultUI::class.java.isAssignableFrom(it)
         }.find {
-            it.getAnnotation(UI::class.java).name == mode
+            it.getAnnotation(AName::class.java).name.contains(mode)
         }?.let {
             return (it.getConstructor(Configuration::class.java).newInstance(config) as DefaultUI) ?: DefaultUI(config)
         }!!
