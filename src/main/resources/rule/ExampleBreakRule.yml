@@ -6,6 +6,24 @@ example_break:
         - '分解可得{set:num}个示例材料'
   reward:
     test_reward_id:
+      # all any
+      match_mode: all
+      item:
+        mythic:
+          id: test
+          amount: '{get:num}'
+
+
+
+高级分解示例:
+  match:
+    - name: '示例被分解物品高级'
+      lore:
+        - '分解可得{set:num}个示例材料'
+      gui:
+        - '二级分解台'
+  reward:
+    test_reward_id:
       match_mode: all
       item:
         mythic:

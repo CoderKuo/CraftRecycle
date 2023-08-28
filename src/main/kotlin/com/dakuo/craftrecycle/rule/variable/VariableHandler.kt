@@ -8,6 +8,10 @@ class VariableHandler {
 
     val templates = CopyOnWriteArrayList<VariableTemplate>()
 
+    fun insertVar(variable:(list:CopyOnWriteArrayList<Variable>)->Unit){
+        variable(cache)
+    }
+
     fun insertTemplate(templateName:String,template:String){
         templates.add(VariableTemplate(templateName,template))
     }

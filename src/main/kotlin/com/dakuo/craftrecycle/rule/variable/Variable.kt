@@ -2,7 +2,7 @@ package com.dakuo.craftrecycle.rule.variable
 
 data class Variable(val key: String){
 
-    constructor(key: String,value:Any) : this(key){
+    constructor(key: String,value:Any?) : this(key){
         setValue(value)
     }
 
