@@ -39,6 +39,7 @@ class ScriptExpansion:CompiledScript {
                 const plugin = Packages.com.dakuo.craftrecycle.CraftRecycle.INSTANCE.plugin
                 const pluginManager = Bukkit.getPluginManager()
                 const scheduler = Bukkit.getScheduler()
+                const playerUtils = Packages.com.dakuo.craftrecycle.scripts.utils.PlayerUtils.INSTANCE
                 
                 function sync(task) {
                     if (Bukkit.isPrimaryThread()) {

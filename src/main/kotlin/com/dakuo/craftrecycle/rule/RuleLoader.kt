@@ -19,8 +19,8 @@ object RuleLoader {
         val ruleFile = File(BukkitPlugin.getInstance().dataFolder, "/rule/")
         if (!ruleFile.exists()){
             ruleFile.mkdir()
-            BukkitPlugin.getInstance().saveResource("rule/ExampleBreakRule.yml.yml",false)
-            BukkitPlugin.getInstance().saveResource("rule/ExampleRecycleRule.yml.yml",false)
+            BukkitPlugin.getInstance().saveResource("rule/ExampleBreakRule.yml",false)
+            BukkitPlugin.getInstance().saveResource("rule/ExampleRecycleRule.yml",false)
         }
 
 

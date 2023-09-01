@@ -21,7 +21,6 @@ object UICmd {
                 suggestion<ProxyCommandSender>{ _,_->
                     onlinePlayers.map { it.name }
                 }
-
                 execute<ProxyCommandSender>{ sender, context, argument ->
                     val pair = UILoader.uiList.find {
                         it.first == context["ui"]
@@ -35,8 +34,9 @@ object UICmd {
                         player.openInventory(it)
                         sender.sendLang("cmd-openUI", mapOf(Pair("{player}", player.name), Pair("{ui}", context["ui"])))
                     }
-
+                    println(context.args().forEach { println(it) })
                 }
+
             }
         }
     }

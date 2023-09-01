@@ -19,5 +19,6 @@ object Main {
     @CommandBody(permission = "CraftRecycle.open")
     val open = UICmd.open
 
-
+    @CommandBody(permission = "CraftRecycle.run")
+    val run = RunCmd.run
 }

@@ -36,7 +36,12 @@ object ScriptManager {
      * 加载全部脚本
      */
     private fun loadScripts() {
-        val dir = File(getDataFolder(), "scripts").listFiles() ?: arrayOf()
+        compiledScripts.clear()
+        val dirFile = File(getDataFolder(), "scripts")
+        if (!dirFile.exists()){
+            dirFile.mkdir()
+        }
+        val dir = dirFile.listFiles() ?: arrayOf()
         for (file in dir) {
             val fileName = file.path.replace("plugins${File.separator}CraftRecycle${File.separator}scripts${File.separator}", "")
             try {

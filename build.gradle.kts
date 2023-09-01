@@ -29,6 +29,7 @@ dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("ink.ptms.core:v11900:11900-minimize:mapped")
     compileOnly("ink.ptms.core:v11900:11900-minimize:universal")
+    compileOnly("org.openjdk.nashorn:nashorn-core:15.4")
     compileOnly(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
 }
