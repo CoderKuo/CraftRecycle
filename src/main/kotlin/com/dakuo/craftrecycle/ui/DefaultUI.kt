@@ -1,7 +1,11 @@
 package com.dakuo.craftrecycle.ui
 
 import com.dakuo.craftrecycle.common.AName
+import com.dakuo.craftrecycle.rule.variable.Variable
+import com.dakuo.craftrecycle.rule.variable.VariableHandler
+import com.dakuo.craftrecycle.ui.clicked.Clicked
 import com.dakuo.craftrecycle.ui.slotmode.Mode
+import com.dakuo.craftrecycle.ui.slotmode.ModeLoader
 import com.dakuo.craftrecycle.ui.slotmode.None
 import net.minecraft.world.item.Items
 import org.bukkit.inventory.Inventory
@@ -10,6 +14,7 @@ import taboolib.common.io.getInstance
 import taboolib.common.io.runningClasses
 import taboolib.library.xseries.XMaterial
 import taboolib.module.configuration.Configuration
+import taboolib.module.configuration.util.getMap
 import taboolib.module.configuration.util.getStringColored
 import taboolib.module.configuration.util.getStringListColored
 import taboolib.module.ui.Menu
@@ -27,15 +32,24 @@ import kotlin.collections.HashMap
 @AName("default")
 open class DefaultUI(val config:Configuration) {
 
-    private val title = config.getString("title"," ")!!
+    protected val title = config.getString("title"," ")!!
 
-    private val slots: CopyOnWriteArrayList<List<Char>> = CopyOnWriteArrayList(config.getStringList("slots").map { it.toCharArray().toList() })
+    protected val param:ConcurrentHashMap<String,Any> = ConcurrentHashMap()
 
-    private val settings:List<DefaultSetting> by lazy {
+    protected val clickedInUI:MutableList<Clicked> = mutableListOf()
+
+    protected val slots: CopyOnWriteArrayList<List<Char>> = CopyOnWriteArrayList(config.getStringList("slots").map { it.toCharArray().toList() })
+
+    protected val basic:Basic by lazy{
+        getBasic()
+    }
+
+    protected val settings:List<DefaultSetting> by lazy {
         config.getConfigurationSection("setting")!!.getKeys(false).map {
             val section = config.getConfigurationSection("setting.$it")!!
             val uiSetting = DefaultSetting(it.toCharArray().first(),
                 section.getString("mode","none")!!,
+                section.getMap("param"),
                 section.getString("item.material","AIR")!!,
                 section.getStringColored("item.name")!!,
                 section.getStringListColored("item.lore"),
@@ -46,15 +60,18 @@ open class DefaultUI(val config:Configuration) {
         }
     }
 
-    open fun toInventory():Inventory{
-        return buildMenu<Basic>(title) {
-            this.slots = this@DefaultUI.slots
-            this.items = getItems()
-            onClick(lock = false){ e->
-                settings.find { it.slot == e.slot }?.getSlotMode()?.clicked?.click(e)
-            }
-
+    fun getBasic():Basic{
+        val basic = Basic(title)
+        basic.slots = this.slots
+        basic.items = getItems()
+        basic.onClick { e->
+            settings.find { it.slot == e.slot }?.getSlotMode()?.clicked?.click(e)
         }
+        return basic
+    }
+
+    open fun toInventory():Inventory{
+        return basic.build()
     }
 
     private fun getItems():ConcurrentHashMap<Char,ItemStack>{
@@ -71,25 +88,31 @@ open class DefaultUI(val config:Configuration) {
 
     }
 
+    fun addAllParam(param:Map<String,Any>){
+        this.param.putAll(param)
+    }
+
+    fun insertClicked(clicked: Clicked){
+        clickedInUI.add(clicked)
+    }
 
 
 }
 
 data class DefaultSetting(val slot:Char,
                      val mode:String = "none",
+                     val param:Map<String,Any>?,
                      val itemMaterial:String = "AIR",
                      val itemName:String = " ",
                      val itemLore:List<String> = arrayListOf(),
                      val itemData:Int = 0,
                      val itemCustomModel:Int = 0){
     fun getSlotMode():Mode{
-        return runningClasses.filter {
-            Mode::class.java.isAssignableFrom(it) && it != Mode::class.java
-        }.map {
-            it.getInstance() as? Mode
-        }.filter(Objects::nonNull).find{
-            it!!.name.contains(mode)
-        } ?: None
+        return (ModeLoader.modes.find {
+            it.name.contains(mode)
+        } ?: None).apply {
+            this.addAllParam(param)
+        }
     }
 
 

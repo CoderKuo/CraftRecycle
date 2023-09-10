@@ -28,31 +28,12 @@ open class Rule(config:Configuration, name:String) {
         }
     }
 
-    val variableHandler: VariableHandler = VariableHandler()
-
-
     protected open val matchRules:List<IMatch> = config.getConfigurationSection("match").let {
         return@let toMatchRule(it!!)
     }
 
     protected open val rewardRules:List<RewardRule> = config.getConfigurationSection("reward").let {
         RewardRule.toRewardRules(it as Configuration)
-    }
-
-    fun insertItemStack(item:ItemStack){
-        variableHandler.insertVar {
-            it.add(Variable("itemMeta",item.itemMeta))
-            it.add(Variable("itemName",item.getName()))
-            it.add(Variable("itemLore",item.itemMeta?.lore))
-        }
-    }
-
-
-    fun match(item:ItemStack):IReward{
-        matchRules.forEach {
-
-        }
-        TODO()
     }
 
 

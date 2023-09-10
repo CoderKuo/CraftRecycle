@@ -21,14 +21,6 @@ import javax.script.ScriptEngine
 
 object RunCmd {
 
-    fun loadLib(engine:ScriptEngine){
-        CraftRecycle.plugin.getResource("lib.js")?.use { input->
-            InputStreamReader(input,"UTF-8").use { reader->
-                engine.eval(reader)
-            }
-        }
-    }
-
     val run = subCommand {
         dynamic("run") {
             dynamic("function") {
@@ -38,28 +30,22 @@ object RunCmd {
                     val map = HashMap<String,Any>()
                     map["player"] = (sender as BukkitPlayer).player
                     ScriptManager.compiledScripts.getOrElse(context["run"]) {
-                        ScriptExpansion(
-                            """
-                        """.trimIndent()
-                        )
-                    }.let {
-                        loadLib(it.scriptEngine)
-                        it.invoke(context["function"],map)
-                    }
+                    ScriptExpansion(
+                        """
+                    """.trimIndent()
+                    )
+                }.invoke(context["function"],map)
                 }
                 dynamic {
                     execute<ProxyCommandSender> { sender, context, argument ->
                         val map = HashMap<String,Any>()
                         map["player"] = (sender as BukkitPlayer).player
                         ScriptManager.compiledScripts.getOrElse(context["run"]) {
-                            ScriptExpansion(
-                                """
-                        """.trimIndent()
-                            )
-                        }.let {
-                            loadLib(it.scriptEngine)
-                            it.invoke(context["function"],map,argument.split(" "))
-                        }
+                        ScriptExpansion(
+                            """
+                    """.trimIndent()
+                        )
+                    }.invoke(context["function"],map,argument.split(" "))
                     }
                 }
             }

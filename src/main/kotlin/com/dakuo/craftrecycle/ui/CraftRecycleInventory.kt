@@ -1,11 +1,16 @@
 package com.dakuo.craftrecycle.ui
 
+import com.dakuo.craftrecycle.rule.variable.VariableHandler
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 
 class CraftRecycleInventory(val player: Player, val ui: DefaultUI) {
 
     lateinit var inventory: Inventory
+
+    val varHandler:VariableHandler = VariableHandler()
+
+    val basic = ui.getBasic()
 
     constructor(player: Player,ui:String) : this(player,UILoader.uiList.find { it.first == ui }?.second ?: error("没有找到名为 $ui 的菜单")){
 
@@ -29,6 +34,9 @@ class CraftRecycleInventory(val player: Player, val ui: DefaultUI) {
     fun isOpen():Boolean{
         return inventory.viewers.contains(player)
     }
+
+
+
 
 
 

@@ -1,6 +1,6 @@
 package com.dakuo.craftrecycle.ui.slotmode
 
-import com.dakuo.craftrecycle.ui.slotmode.clicked.Clicked
+import com.dakuo.craftrecycle.ui.clicked.Clicked
 import taboolib.module.ui.ClickEvent
 
 object None:Mode {

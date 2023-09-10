@@ -1,10 +1,14 @@
 title: '示例分解菜单'
-mode: break
+mode:
+  name: break
+  param:
+    break_slot: 'o'
 slots:
   - '#########'
-  - '#       #'
-  - '#       #'
+  - '#ooooooo#'
+  - '#ooooooo#'
   - '###>B<###'
+  - '####J####'
 setting:
   '#':
     mode: none
@@ -28,7 +32,10 @@ setting:
       lore:
         - '&6<<-'
   B:
-    mode: button
+    mode: 'BreakButton'
+    # 传到mode中的参数
+    param:
+      slot: 'o'
     item:
       material: 'ANVIL'
       name: '&a点击开始分解'
@@ -38,7 +45,15 @@ setting:
         - ''
         - '&f 预计耗时: {time}秒完成...'
         - ''
-
+  J:
+    mode: example
+    item:
+      material: 'APPLE'
+      name: '&aJavaScriptMode'
+  o:
+    mode: break
+    item:
+      material: 'AIR'
 animation:
   - bind: '#'
     interval: 20

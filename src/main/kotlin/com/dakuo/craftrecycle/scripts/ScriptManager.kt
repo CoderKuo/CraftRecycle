@@ -1,8 +1,12 @@
 package com.dakuo.craftrecycle.scripts
 
+import com.dakuo.craftrecycle.CraftRecycle
 import org.bukkit.Bukkit
+import taboolib.common.LifeCycle
+import taboolib.common.platform.Awake
 import taboolib.common.platform.function.getDataFolder
 import java.io.File
+import java.io.InputStreamReader
 
 object ScriptManager {
 
@@ -49,6 +53,16 @@ object ScriptManager {
             } catch (error: Throwable) {
                 error.printStackTrace()
             }
+        }
+    }
+
+    @Awake(LifeCycle.ENABLE)
+    private fun enable(){
+        val enableList = CraftRecycle.config.getStringList("js.enable")
+        enableList.forEach {
+            val file = File(getDataFolder(), it)
+            val inputStreamReader = InputStreamReader(file.inputStream(), "UTF-8")
+            nashornHooker.getNashornEngine().eval(inputStreamReader)
         }
     }
 

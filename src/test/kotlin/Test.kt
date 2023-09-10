@@ -2,10 +2,7 @@
 
 
 fun main() {
-
-
-
-    println(1)
+    println("mode")
 
 }
 
